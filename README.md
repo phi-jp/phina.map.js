@@ -1,2 +1,2 @@
-# phina.map.js
-map plugin for phina.js
+# phina.tile.js
+tile plugin for phina.js
