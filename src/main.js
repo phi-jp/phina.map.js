@@ -7,37 +7,38 @@ phina.define('phina.tile.SimpleTile', {
     this.superInit();
 
     this.tile = options.tile;
-    this.maps = options.maps;
+    this.map = options.map;
 
-    this.tileWidth = 64;
-    this.tileHeight = 64;
+    this.map.cols = this.map.data.length/this.map.rows;
 
-    this.xmax = this.maps.reduce(function(prev, d) {
-      var l = d.length;
-      return l > prev ? l : prev;
-    }, 0);
-    this.ymax = this.maps.length;
-
-    this.padding = 0;
     this.image = phina.asset.AssetManager.get('image', this.tile.image);
 
-    this.width = options.chipWidth*this.xmax;
-    this.height = options.chipHeight*this.ymax;
+    this.padding = 0;
+    this.width = options.map.width*this.map.rows;
+    this.height = options.map.height*this.map.cols;
   },
 
   _render: function() {
     this._renderBackground();
     var canvas = this.canvas;
 
-    this.maps.each(function(d, y) {
-      d.each(function(index, x) {
-        var dx = x*this.tileWidth;
-        var dy = y*this.tileHeight;
-        canvas.context.drawImage(this.image.domElement,
-          0, 0, 32, 32,
-          dx, dy, this.tileWidth, this.tileHeight
-          )
-      }, this);
+    this.map.data.each(function(index, i) {
+      // 
+      var xIndex = index%this.tile.rows;
+      var yIndex = (index/this.tile.rows)|0;
+      var sx = xIndex*this.tile.width;
+      var sy = yIndex*this.tile.height;
+
+      // 
+      var xIndex = i%this.map.rows;
+      var yIndex = (i/this.map.rows)|0;
+      var dx = xIndex*this.map.width;
+      var dy = yIndex*this.map.height;
+
+      canvas.context.drawImage(this.image.domElement,
+        sx, sy, this.tile.width, this.tile.height,
+        dx, dy, this.map.width, this.map.height
+        )
     }, this);
   },
 });

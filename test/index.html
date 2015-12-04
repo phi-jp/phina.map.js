@@ -33,18 +33,22 @@ phina.define('MainScene', {
     this.superInit();
 
     var shape = SimpleTile({
-      chipWidth: 64,
-      chipHeight: 64,
       tile: {
+        rows: 16,
         image: 'tile',
         width: 32,
         height: 32,
       },
-      maps: [
-        [1, 1, 1, 1],
-        [2, 2, 2, 2, 5],
-        [2, 2, 2, 2],
-      ],
+      map: {
+        width: 64,
+        height: 64,
+        rows: 3,
+        data: [
+          1, 48, 2,
+          1, 48, 2,
+          1, 48, 2,
+        ]
+      },
     }).addChildTo(this);
     shape.setPosition(this.gridX.center(), this.gridY.center());
   },
