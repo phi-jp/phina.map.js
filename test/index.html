@@ -34,8 +34,10 @@ phina.define('MainScene', {
 
     var mapSheet = phina.tile.MapSheet();
     mapSheet.load('../assets/sample.tmx').then(function() {
-      console.dir(mapSheet);
-    });
+      var map = TiledMap(mapSheet).addChildTo(this);
+      map.x = 320;
+      map.y = 480;
+    }.bind(this));
     return ;
 
     var shape = TileShape({
@@ -83,11 +85,11 @@ phina.define('MainScene', {
 phina.main(function() {
   var app = GameApp({
     startLabel: 'main',
-    // assets: {
-    //   image: {
-    //     tile: '../assets/mapImage.png',
-    //   },
-    // },
+    assets: {
+      image: {
+        tile: '../assets/mapImage.png',
+      },
+    },
   });
   
   app.run();

@@ -34,10 +34,10 @@ phina.define('phina.tile.MapSheet', {
   _loadFromTiledMap: function(json) {
     var map = json.map[0];
 
-    this.width = map._attr.width;
-    this.height = map._attr.height;
-    this.tileWidth = map._attr.tilewidth;
-    this.tileHeight = map._attr.tileheight;
+    this.width = +map._attr.width;
+    this.height = +map._attr.height;
+    this.tileWidth = +map._attr.tilewidth;
+    this.tileHeight = +map._attr.tileheight;
 
     this.tilesets = map.tileset.map(function(tileset) {
       var attr = tileset._attr;
@@ -45,12 +45,12 @@ phina.define('phina.tile.MapSheet', {
       return {
         id: attr.firstgid,
         name: attr.name,
-        tileWidth: attr.tilewidth,
-        tileHeight: attr.tileheight,
+        tileWidth: +attr.tilewidth,
+        tileHeight: +attr.tileheight,
         image: {
           source: img._attr.source,
-          width: img._attr.width,
-          height: img._attr.height,
+          width: +img._attr.width,
+          height: +img._attr.height,
         }
       };
     });
@@ -164,11 +164,62 @@ phina.define('phina.tile.TileShape', {
 });
 
 
+phina.define('phina.tile.TileShape2', {
+  superClass: 'phina.display.Shape',
+
+  init: function(options) {
+    this.superInit();
+
+    this.options = options;
+
+    this.padding = 0;
+    this.width = options.width*options.tileWidth;
+    this.height = options.height*options.tileHeight;
+    this.scaleX = 0.5;
+    this.scaleY = 0.5;
+  },
+
+  _render: function() {
+    this._renderBackground();
+    var canvas = this.canvas;
+
+    return ;
+
+    this.map.data.each(function(index, i) {
+      if (index === -1) return ;
+      // 
+      var xIndex = index%this.tile.rows;
+      var yIndex = (index/this.tile.rows)|0;
+      var sx = xIndex*this.tile.width;
+      var sy = yIndex*this.tile.height;
+
+      // 
+      var xIndex = i%this.map.rows;
+      var yIndex = (i/this.map.rows)|0;
+      var dx = xIndex*this.map.width;
+      var dy = yIndex*this.map.height;
+
+      canvas.context.drawImage(this.image.domElement,
+        sx, sy, this.tile.width, this.tile.height,
+        dx, dy, this.map.width, this.map.height
+        )
+    }, this);
+  },
+});
+
+
 phina.define('phina.tile.TiledMap', {
   superClass: 'phina.display.CanvasElement',
 
-  init: function() {
+  init: function(mapsheet) {
     this.superInit();
+
+    this.mapsheet = mapsheet;
+
+    this.mapsheet.layers.each(function() {
+      var shape = phina.tile.TileShape2(mapsheet).addChildTo(this);
+
+    }, this);
   }
 });
 
