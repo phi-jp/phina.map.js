@@ -127,10 +127,10 @@
     init: function(mapsheet) {
       this.superInit();
 
-      this.scaleX = 0.5;
-      this.scaleY = 0.5;
-
       this.mapsheet = mapsheet;
+
+      this.width = mapsheet.width*mapsheet.tileWidth;
+      this.height = mapsheet.height*mapsheet.tileHeight;
 
       var tileset = this.mapsheet.tilesets[0];
       var xIndexMax = tileset.image.width / tileset.tileWidth;

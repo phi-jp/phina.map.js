@@ -35,50 +35,11 @@ phina.define('MainScene', {
     var mapSheet = phina.tile.MapSheet();
     mapSheet.load('../assets/sample.tmx').then(function() {
       var map = TiledMap(mapSheet).addChildTo(this);
-      map.x = 320;
-      map.y = 480;
+      map.x = map.width/2;
+      map.y = map.height/2;
+
+      Draggable().attachTo(map);
     }.bind(this));
-    return ;
-
-    var shape = TileShape({
-      tile: {
-        rows: 16,
-        image: 'tile',
-        width: 32,
-        height: 32,
-      },
-      map: {
-        width: 64,
-        height: 64,
-        rows: 3,
-        data: [
-          1, 48, 2,
-          1, 48, 2,
-          1, 48, 2,
-        ]
-      },
-    }).addChildTo(this);
-    shape.setPosition(this.gridX.center(), this.gridY.center());
-
-    var shape = TileShape({
-      tile: {
-        rows: 16,
-        image: 'tile',
-        width: 32,
-        height: 32,
-      },
-      map: {
-        width: 64,
-        height: 64,
-        rows: 3,
-        data: [
-          -1, -1, -1,
-          -1, 161, -1,
-          -1, -1, -1,
-        ]
-      },
-    }).addChildTo(this);
-    shape.setPosition(this.gridX.center(), this.gridY.center());
   },
 });
 
