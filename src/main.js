@@ -214,11 +214,46 @@ phina.define('phina.tile.TiledMap', {
   init: function(mapsheet) {
     this.superInit();
 
+    this.scaleX = 0.5;
+    this.scaleY = 0.5;
+
     this.mapsheet = mapsheet;
 
-    this.mapsheet.layers.each(function() {
-      var shape = phina.tile.TileShape2(mapsheet).addChildTo(this);
+    var tileset = this.mapsheet.tilesets[0];
+    var rows = tileset.image.width / tileset.tileWidth;
+    var image = phina.asset.AssetManager.get('image', 'tile');
 
+    this.mapsheet.layers.each(function(layer) {
+      var shape = phina.display.Shape().addChildTo(this);
+
+      shape.padding = 0;
+      shape.width = mapsheet.width*mapsheet.tileWidth;
+      shape.height = mapsheet.height*mapsheet.tileHeight;
+      shape.backgroundColor = 'transparent';
+
+      shape._render = function() {
+        shape._renderBackground();
+
+        layer.data.each(function(index, i) {
+          if (index === -1) return ;
+
+          // 
+          var xIndex = index%rows;
+          var yIndex = (index/rows)|0;
+          var sx = xIndex*tileset.tileWidth;
+          var sy = yIndex*tileset.tileHeight;
+          // 
+          var xIndex = i%mapsheet.width;
+          var yIndex = (i/mapsheet.width)|0;
+          var dx = xIndex*mapsheet.tileWidth;
+          var dy = yIndex*mapsheet.tileHeight;
+
+          shape.canvas.context.drawImage(image.domElement,
+            sx, sy, tileset.tileWidth, tileset.tileHeight,
+            dx, dy, mapsheet.tileWidth, mapsheet.tileHeight
+            )
+        });
+      };
     }, this);
   }
 });
